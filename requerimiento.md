@@ -49,6 +49,8 @@ Dentro de src/main/java/victor/farmacia:
   - BaseDatos.java
 - model
   - Usuario.java
+- dto
+    - UsuarioDto.java
 - repository
   - UsuarioRepository.java
   - jdbc
@@ -189,6 +191,17 @@ public class Usuario {
                 ", email='" + email + '\'' +
                 '}';
     }
+}
+```
+
+### 4.1.1 dto/UsuarioDto.java (record)
+
+Usa `record` para transportar datos hacia la vista/controlador sin exponer la entidad directamente.
+
+```java
+package victor.farmacia.dto;
+
+public record UsuarioDto(Integer id, String nombre, String email) {
 }
 ```
 
@@ -411,6 +424,7 @@ public class UsuarioRepositoryJdbc implements UsuarioRepository {
 ```java
 package victor.farmacia.service;
 
+import victor.farmacia.dto.UsuarioDto;
 import victor.farmacia.model.Usuario;
 import victor.farmacia.repository.UsuarioRepository;
 
@@ -429,15 +443,21 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public List<Usuario> listarTodos() {
-        return usuarioRepository.listarTodos();
+    public List<UsuarioDto> listarTodos() {
+        return usuarioRepository.listarTodos()
+                .stream()
+                .map(this::aDto)
+                .toList();
     }
 
-    public List<Usuario> buscarPorNombre(String nombre) {
+    public List<UsuarioDto> buscarPorNombre(String nombre) {
         if (nombre == null || nombre.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre de busqueda no puede estar vacio");
         }
-        return usuarioRepository.buscarPorNombre(nombre.trim());
+        return usuarioRepository.buscarPorNombre(nombre.trim())
+                .stream()
+                .map(this::aDto)
+                .toList();
     }
 
     public boolean crear(String nombre, String email) {
@@ -458,9 +478,9 @@ public class UsuarioService {
         return usuarioRepository.eliminar(id);
     }
 
-    public Optional<Usuario> buscarPorId(Integer id) {
+    public Optional<UsuarioDto> buscarPorId(Integer id) {
         validarId(id);
-        return usuarioRepository.buscarPorId(id);
+        return usuarioRepository.buscarPorId(id).map(this::aDto);
     }
 
     private void validarId(Integer id) {
@@ -486,6 +506,10 @@ public class UsuarioService {
             throw new IllegalArgumentException("El email no tiene un formato valido");
         }
     }
+
+    private UsuarioDto aDto(Usuario usuario) {
+        return new UsuarioDto(usuario.getId(), usuario.getNombre(), usuario.getEmail());
+    }
 }
 ```
 
@@ -494,7 +518,7 @@ public class UsuarioService {
 ```java
 package victor.farmacia.view;
 
-import victor.farmacia.model.Usuario;
+import victor.farmacia.dto.UsuarioDto;
 
 import java.util.List;
 import java.util.Scanner;
@@ -547,15 +571,15 @@ public class UsuarioView {
         return "s".equalsIgnoreCase(scanner.nextLine().trim());
     }
 
-    public void mostrarUsuarios(List<Usuario> usuarios) {
+    public void mostrarUsuarios(List<UsuarioDto> usuarios) {
         if (usuarios.isEmpty()) {
             System.out.println("No hay usuarios para mostrar.");
             return;
         }
 
         System.out.println("ID | NOMBRE | EMAIL");
-        for (Usuario usuario : usuarios) {
-            System.out.println(usuario.getId() + " | " + usuario.getNombre() + " | " + usuario.getEmail());
+        for (UsuarioDto usuario : usuarios) {
+            System.out.println(usuario.id() + " | " + usuario.nombre() + " | " + usuario.email());
         }
     }
 
@@ -574,7 +598,7 @@ public class UsuarioView {
 ```java
 package victor.farmacia.controller;
 
-import victor.farmacia.model.Usuario;
+import victor.farmacia.dto.UsuarioDto;
 import victor.farmacia.service.UsuarioService;
 import victor.farmacia.view.UsuarioView;
 
@@ -632,7 +656,7 @@ public class UsuarioController {
     }
 
     private void listar() {
-        List<Usuario> usuarios = usuarioService.listarTodos();
+        List<UsuarioDto> usuarios = usuarioService.listarTodos();
         usuarioView.mostrarUsuarios(usuarios);
     }
 
@@ -648,7 +672,7 @@ public class UsuarioController {
 
     private void editar() {
         int id = usuarioView.pedirId();
-        Optional<Usuario> existente = usuarioService.buscarPorId(id);
+        Optional<UsuarioDto> existente = usuarioService.buscarPorId(id);
 
         if (existente.isEmpty()) {
             usuarioView.mostrarError("No existe un usuario con ese id.");
@@ -661,14 +685,14 @@ public class UsuarioController {
 
     private void eliminar() {
         int id = usuarioView.pedirId();
-        Optional<Usuario> existente = usuarioService.buscarPorId(id);
+        Optional<UsuarioDto> existente = usuarioService.buscarPorId(id);
 
         if (existente.isEmpty()) {
             usuarioView.mostrarError("No existe un usuario con ese id.");
             return;
         }
 
-        boolean confirmar = usuarioView.pedirConfirmacion("Confirma eliminar a " + existente.get().getNombre() + "?");
+        boolean confirmar = usuarioView.pedirConfirmacion("Confirma eliminar a " + existente.get().nombre() + "?");
         if (!confirmar) {
             usuarioView.mostrarMensaje("Operacion cancelada.");
             return;
@@ -827,6 +851,7 @@ class UsuarioRepositoryJdbcTest {
 Se mantiene igual:
 
 - model
+- dto
 - repository
 - service
 - config
@@ -887,6 +912,7 @@ Criterio de exito:
 Tarea:
 
 - Implementa Usuario.java.
+- Implementa UsuarioDto como `record`.
 - Implementa UsuarioRepository (interfaz).
 - Implementa UsuarioRepositoryJdbc con listar, crear y buscarPorId.
 

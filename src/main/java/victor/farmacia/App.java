@@ -1,19 +1,19 @@
 package victor.farmacia;
 
-public class App{
-    public static void main (String[] ags){
-        System.out.println("Hola desde farmacia app");
-        Operacion op = new Operacion();
-        System.out.print(op.sumar(1, 2));        
-        System.out.println("Prueba de conexión a la base de datos:");
-        
-        BaseDatos db = new BaseDatos(
-            "jdbc:mysql://localhost:3306/farmacia_db", 
-            "victor", 
-            "victor123");
-        
-        for (Usuario u : db.obtenerUsuarios()) {
-            System.out.println(u);  
-        }
+import victor.farmacia.controller.UsuarioController;
+import victor.farmacia.repository.UsuarioRepository;
+import victor.farmacia.repository.jdbc.UsuarioRepositoryJdbc;
+import victor.farmacia.service.UsuarioService;
+import victor.farmacia.view.UsuarioView;
+
+public class App {
+
+    public static void main(String[] args) {
+        UsuarioRepository usuarioRepository = new UsuarioRepositoryJdbc();
+        UsuarioService usuarioService = new UsuarioService(usuarioRepository);
+        UsuarioView usuarioView = new UsuarioView();
+        UsuarioController usuarioController = new UsuarioController(usuarioService, usuarioView);
+
+        usuarioController.iniciar();
     }
 }
