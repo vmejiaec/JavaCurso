@@ -35,7 +35,7 @@ create table usuario (
 insert into usuario values 
 (1, 'Víctor', 'victor_m@g.com'),
 (2, 'María', 'maria_m@t.com'),
-(3, 'Olga', 'olga_m@d.com');
+(3, 'Lorena', 'lorena_m@d.com');
 
 insert into medicina (id, nombre, farmaceutica) values
 (1, 'Paracetamol', 'Bayer'),
