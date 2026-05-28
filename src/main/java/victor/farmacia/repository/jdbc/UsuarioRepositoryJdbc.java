@@ -16,7 +16,7 @@ public class UsuarioRepositoryJdbc implements UsuarioRepository{
 
     @Override
     public List<Usuario> listarTodos(){
-        String sql = "Select id, nombre, email from Usuario ";
+        String sql = "Select id, nombre, email from usuario ";
         List<Usuario> usuarios = new ArrayList<>();
 
         try(
@@ -46,7 +46,7 @@ public class UsuarioRepositoryJdbc implements UsuarioRepository{
 
         @Override
     public List<Usuario> buscarPorNombre(String nombre) {
-        String sql = "SELECT id, nombre, email FROM Usuario WHERE nombre LIKE ? ORDER BY id";
+        String sql = "SELECT id, nombre, email FROM usuario WHERE nombre LIKE ? ORDER BY id";
         List<Usuario> usuarios = new ArrayList<>();
 
         try (Connection connection = BaseDatos.obtenerConexion();
@@ -74,7 +74,7 @@ public class UsuarioRepositoryJdbc implements UsuarioRepository{
 
     @Override
     public Optional<Usuario> buscarPorId(Integer id) {
-        String sql = "SELECT id, nombre, email FROM Usuario WHERE id = ?";
+        String sql = "SELECT id, nombre, email FROM usuario WHERE id = ?";
 
         try (Connection connection = BaseDatos.obtenerConexion();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -102,7 +102,7 @@ public class UsuarioRepositoryJdbc implements UsuarioRepository{
 
     @Override
     public boolean crear(Usuario usuario) {
-        String sql = "INSERT INTO Usuario(nombre, email) VALUES (?, ?)";
+        String sql = "INSERT INTO usuario(nombre, email) VALUES (?, ?)";
 
         try (Connection connection = BaseDatos.obtenerConexion();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -120,7 +120,7 @@ public class UsuarioRepositoryJdbc implements UsuarioRepository{
 
     @Override
     public boolean actualizar(Usuario usuario) {
-        String sql = "UPDATE Usuario SET nombre = ?, email = ? WHERE id = ?";
+        String sql = "UPDATE usuario SET nombre = ?, email = ? WHERE id = ?";
 
         try (Connection connection = BaseDatos.obtenerConexion();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -139,7 +139,7 @@ public class UsuarioRepositoryJdbc implements UsuarioRepository{
 
     @Override
     public boolean eliminar(Integer id) {
-        String sql = "DELETE FROM Usuario WHERE id = ?";
+        String sql = "DELETE FROM usuario WHERE id = ?";
 
         try (Connection connection = BaseDatos.obtenerConexion();
              PreparedStatement statement = connection.prepareStatement(sql)) {

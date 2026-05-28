@@ -1,6 +1,9 @@
 # Compiled class file
 *.class
 
+# archivo de configuraciòn
+.env
+
 # Log file and tmp file
 *.log
 *.tmp

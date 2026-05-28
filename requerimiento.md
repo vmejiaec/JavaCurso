@@ -83,6 +83,7 @@ Agrega o verifica en pom.xml:
 - h2 (test)
 - slf4j-api
 - logback-classic
+- dotenv-java
 
 Ejemplo:
 
@@ -118,6 +119,12 @@ Ejemplo:
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
         <version>1.5.6</version>
+    </dependency>
+
+    <dependency>
+        <groupId>io.github.cdimascio</groupId>
+        <artifactId>dotenv-java</artifactId>
+        <version>3.0.0</version>
     </dependency>
 </dependencies>
 ```
@@ -207,22 +214,43 @@ public record UsuarioDto(Integer id, String nombre, String email) {
 
 ### 4.2 config/BaseDatos.java
 
-Clave para pruebas en memoria: la conexión se toma de propiedades del sistema, con valores por defecto para desarrollo local.
+Clave para no quemar credenciales: la conexión se toma primero de propiedades del sistema (util para tests y CI con `-D`), y si no existen, del archivo `.env`.
 
 ```java
 package victor.farmacia.config;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class BaseDatos {
 
-    private static final String URL = System.getProperty("db.url", "jdbc:mysql://localhost:3306/farmacia");
-    private static final String USER = System.getProperty("db.user", "root");
-    private static final String PASSWORD = System.getProperty("db.password", "root");
+    private static final Dotenv DOTENV = Dotenv.configure()
+            .ignoreIfMissing()
+            .load();
+
+    private static final String URL = leerConfig("db.url", "DB_URL");
+    private static final String USER = leerConfig("db.user", "DB_USER");
+    private static final String PASSWORD = leerConfig("db.password", "DB_PASSWORD");
 
     private BaseDatos() {
+    }
+
+    private static String leerConfig(String systemKey, String envKey) {
+        String valorSistema = System.getProperty(systemKey);
+        if (valorSistema != null && !valorSistema.isBlank()) {
+            return valorSistema;
+        }
+
+        String valorDotenv = DOTENV.get(envKey);
+        if (valorDotenv != null && !valorDotenv.isBlank()) {
+            return valorDotenv;
+        }
+
+        throw new IllegalStateException(
+                "Falta configuracion de BD: define -D" + systemKey + " o la variable " + envKey + " en .env"
+        );
     }
 
     public static Connection obtenerConexion() throws SQLException {
@@ -230,6 +258,23 @@ public class BaseDatos {
     }
 }
 ```
+
+### 4.2.1 Archivo .env (edicion centralizada de conexion)
+
+En la raiz del proyecto crea `.env`:
+
+```env
+DB_URL=jdbc:mysql://localhost:3306/farmacia
+DB_USER=tu_usuario
+DB_PASSWORD=tu_password
+```
+
+Para evitar filtrar secretos:
+
+- Agrega `.env` a `.gitignore`.
+- Crea `.env.example` sin valores reales para documentar las claves requeridas.
+
+Con este enfoque, cambias la configuracion de BD en un solo lugar (`.env`) y tambien puedes sobreescribir en tests/CI usando `-Ddb.url`, `-Ddb.user` y `-Ddb.password`.
 
 ### 4.3 repository/UsuarioRepository.java
 
