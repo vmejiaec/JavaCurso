@@ -26,16 +26,16 @@ create table proveedor_medicina(
 );
 
 create table usuario (
-    id int primary key,
+    id int auto_increment primary key,
     nombre varchar(100) not null,
     email varchar(30) not null unique
 );
 
 -- Cargar datos
-insert into usuario values 
-(1, 'Víctor', 'victor_m@g.com'),
-(2, 'María', 'maria_m@t.com'),
-(3, 'Lorena', 'lorena_m@d.com');
+insert into usuario (nombre, email) values 
+('Víctor', 'victor_m@g.com'),
+('María', 'maria_m@t.com'),
+('Lorena', 'lorena_m@d.com');
 
 insert into medicina (id, nombre, farmaceutica) values
 (1, 'Paracetamol', 'Bayer'),

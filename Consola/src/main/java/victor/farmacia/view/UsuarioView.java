@@ -22,20 +22,12 @@ public class UsuarioView {
     }
 
     public int leerOpcion() {
-        try {
-            return Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            return -1;
-        }
+        return Integer.parseInt(scanner.nextLine());
     }
 
     public int pedirId() {
         System.out.print("Id: ");
-        try {
-            return Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            return -1;
-        }
+        return Integer.parseInt(scanner.nextLine());
     }
 
     public String pedirNombre() {
@@ -50,7 +42,7 @@ public class UsuarioView {
 
     public boolean pedirConfirmacion(String mensaje) {
         System.out.print(mensaje + " (s/n): ");
-        return "s".equalsIgnoreCase(scanner.nextLine().trim());
+        return "s".equalsIgnoreCase(scanner.nextLine());
     }
 
     public void mostrarUsuarios(List<UsuarioDto> usuarios) {

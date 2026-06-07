@@ -50,8 +50,6 @@ public class UsuarioController {
                 default:
                     usuarioView.mostrarError("Opcion invalida.");
             }
-        } catch (IllegalArgumentException e) {
-            usuarioView.mostrarError("Validacion: " + e.getMessage());
         } catch (Exception e) {
             usuarioView.mostrarError("Error inesperado: " + e.getMessage());
         }
