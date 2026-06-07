@@ -1,0 +1,12 @@
+[
+    {"tipo":"cuadrado", 
+        "lado":5},
+    {"tipo":"circulo", 
+        "radio":3},
+    {"tipo":"triangulo", 
+        "base":4, 
+        "altura":6, 
+        "lado1":4, 
+        "lado2":5, 
+        "lado3":6}
+]
