@@ -1,0 +1,10 @@
+Paracetamol;Generica;Bayer;0.25;150
+Amoxicilina;Generica;MK;0.80;75
+Aspirina;Comercial;Bayer;0.45;200
+Ibuprofeno;Generica;Genfar;0.35;120
+Panadol;Comercial;GSK;0.50;90
+Loratadina;Generica;Tecnoquimicas;0.30;110
+Voltaren;Comercial;Novartis;1.20;60
+Omeprazol;Generica;Sandoz;0.40;130
+Tempra;Comercial;Bristol Myers Squibb;0.55;80
+Metformina;Generica;Merck;0.28;140
