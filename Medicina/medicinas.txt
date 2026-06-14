@@ -1,0 +1,4 @@
+Acetaminofen;Bayer;12;0.65
+Finalin Forte;Genfa;23;1.22
+Paracetamo;MG;30;0.23
+Aspirina;Bayer;45;0.34
