@@ -1,10 +1,10 @@
-Paracetamol;Generica;Bayer;0.25;150
-Amoxicilina;Generica;MK;0.80;75
-Aspirina;Comercial;Bayer;0.45;200
-Ibuprofeno;Generica;Genfar;0.35;120
-Panadol;Comercial;GSK;0.50;90
-Loratadina;Generica;Tecnoquimicas;0.30;110
-Voltaren;Comercial;Novartis;1.20;60
-Omeprazol;Generica;Sandoz;0.40;130
-Tempra;Comercial;Bristol Myers Squibb;0.55;80
-Metformina;Generica;Merck;0.28;140
+P23;Paracetamol;Bayer;G;0.25;150
+A34;Amoxicilina;MK;G;0.80;75
+A60;Aspirina;Bayer;G;0.45;200
+I67;Ibuprofeno;Genfar;G;0.35;120
+P99;Panadol;GSK;C;0.50;90
+L34;Loratadina;Tecnoquimicas;G;0.30;110
+V76;Voltaren;Novartis;C;1.20;60
+O44;Omeprazol;Sandoz;G;0.40;130
+T77;Tempra;Bristol Myers Squibb;C;0.55;80
+M39;Metformina;Merck;G;0.28;140
