@@ -1,14 +1,24 @@
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class App {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
+        // Obtener lista de medicinas
+        Fuente fuente = new Fuente();
+        List<String> lineas = fuente.leerURL("https://raw.githubusercontent.com/vmejiaec/JavaCurso/refs/heads/main/Leer/medicinas.txt");
+        List<Medicina> medicinas = new ArrayList<>();
+
+        Servicio servicio = new Servicio();
+        medicinas = servicio.convertir(lineas);
+
+        // Crear la ventana de medicinas
         JFrame ventana = new JFrame("Farmacia Salud Total");
-        ventana.setSize(500, 500);
+        ventana.setSize(900, 500);
         ventana.setLayout(null);
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -25,15 +35,18 @@ public class App {
         panelBotones.setLayout(new GridLayout(1,3,15,15));
 
         // Panel para la tabla de medicinas
+        JPanel panelTabla = new JPanel();
+        panelTabla.setLayout(new BorderLayout(5,5));
+
         String[] columnas = {"Codigo", "Nombre", "Laboratorio", "Tipo", "Cantidad", "Precio"};
         DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
         
         for (Medicina medicina : medicinas) {
-            
+            modelo.addRow( medicina.toArray());
         }
-
-        JTable panelTabla = new JTable();
-
+        JTable tabla = new JTable(modelo);
+        JScrollPane scroll = new JScrollPane(tabla);
+        panelTabla.add(scroll, BorderLayout.CENTER);
 
         // Campos
         JLabel lblCodigo = new JLabel("Código:");
@@ -92,6 +105,9 @@ public class App {
 
         panelFormulario.add(panel, BorderLayout.CENTER);
         panelFormulario.add(panelBotones, BorderLayout.SOUTH);
+
+        ventana.add(panelTabla);
+        panelTabla.setBounds(20+350+20,20,500,300);
         
         ventana.setVisible(true);
     }
