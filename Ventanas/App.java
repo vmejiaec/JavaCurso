@@ -15,8 +15,11 @@ public class App {
     public static void main(String[] args) throws Exception {
 
         // Obtener lista de medicinas
-        MedicinaRepositorio repo = new MedicinaRepositorio();
-        List<Medicina> medicinas = repo.consultar();
+
+        Fuente fuente = new Fuente();
+        List<String> lineas = fuente.leerURL("https://raw.githubusercontent.com/vmejiaec/JavaCurso/refs/heads/main/Leer/medicinas.txt");
+        Servicio servicio = new Servicio();
+        List<Medicina> medicinas  = servicio.convertir(lineas);
 
         // Crear la ventana de medicinas
         JFrame ventana = new JFrame("Farmacia Salud Total");
