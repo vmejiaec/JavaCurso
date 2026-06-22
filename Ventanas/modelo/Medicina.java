@@ -1,3 +1,5 @@
+package modelo;
+
 public class Medicina{
    public String codigo;
    public String nombre;
@@ -34,3 +36,15 @@ public class Medicina{
    }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+

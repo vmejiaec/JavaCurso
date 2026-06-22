@@ -1,3 +1,7 @@
+package controlador;
+
+import modelo.Medicina;
+
 import java.util.ArrayList;
 import java.util.List;
 
