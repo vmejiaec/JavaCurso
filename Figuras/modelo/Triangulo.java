@@ -1,7 +1,7 @@
 
 package modelo;
 
-public class Triangulo{
+public class Triangulo extends Figura{
   private int ladoA;
   private int ladoB;
   private int ladoC;
@@ -24,15 +24,27 @@ public class Triangulo{
     this.altura = Integer.parseInt(altura);
   }
 
-  public int area (){
-    return (base * altura )/2;
+  @Override
+  public Double area (){
+    double respuesta = (base * altura )/2;
+    return respuesta;
   }
 
-  public int perimetro(){
-    return ladoA + ladoB + ladoC;
+  @Override
+  public Double perimetro(){
+    double respuesta = ladoA + ladoB + ladoC;
+    return respuesta;
   }
 
-    public String estado(){
-        return "Triángulo de área: "+ area() + " y perímetro: " + perimetro();
-    }
+  @Override
+  public String etiqueta(){
+      return "Triángulo";
+   }
+
+
 }
+
+
+
+
+

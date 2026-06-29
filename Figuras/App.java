@@ -1,6 +1,8 @@
+import modelo.Figura;
 import modelo.Cuadrado;
 import modelo.Circulo;
 import modelo.Triangulo;
+import modelo.Fabrica;
 
 import controlador.Fuente;
 import java.util.List;
@@ -20,51 +22,16 @@ public class App{
                 System.out.println("Error con la lectura del archivo "+ e.getMessage());
             }
 
-            List<Cuadrado> listaCuadrados = new ArrayList<>();
-            List<Circulo> listaCirculos = new ArrayList<>();
-            List<Triangulo> listaTriangulos = new ArrayList<>();
+            Fabrica fabrica = new Fabrica();
 
+            List<Figura> listaFiguras = new ArrayList<>();
             for(String linea : lineas){
-                // Partir la linea
-                Object[] campos = linea.split(";");
-
-                String tipoFigura = campos[0].toString();
-                switch(tipoFigura){
-                    case "Cuadrado":
-                        Cuadrado cuadrado = new Cuadrado(campos[1].toString());
-                        listaCuadrados.add(cuadrado);
-                        break;
-                    case "Triangulo":
-                        Triangulo triangulo = new Triangulo(
-                            campos[1].toString(),
-                            campos[2].toString(),
-                            campos[3].toString(),
-                            campos[4].toString(),
-                            campos[5].toString()
-                        );
-                        listaTriangulos.add(triangulo);
-                        break;
-                    case "Circulo":
-                        Circulo circulo = new Circulo(campos[1].toString());
-                        listaCirculos.add(circulo);
-                        break;
-                }
+                listaFiguras.add(fabrica.crear(linea));
             }
-            // Presentar las tres listas en pantalla
-            // - Lista de Cuadrados
-            System.out.println("Lista de cuadrados: No "+listaCuadrados.size());
-            for (Cuadrado cuadrado: listaCuadrados){
-               System.out.println(cuadrado.estado());
-            }
-            // - Lista de Triángulos
-            System.out.println("Lista de triángulos: No "+listaTriangulos.size());
-            for (Triangulo triangulo: listaTriangulos){
-               System.out.println(triangulo.estado());
-            }
-            // - Lista de Circulos
-            System.out.println("Lista de círculos: No "+listaCirculos.size());
-            for (Circulo circulo: listaCirculos){
-               System.out.println(circulo.estado());
+            // Presentar las figuras en pantalla
+            System.out.println("Lista de figuras: No "+listaFiguras.size());
+            for (Figura figura: listaFiguras){
+               System.out.println(figura.estado());
             }
    }
 }

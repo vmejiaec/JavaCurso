@@ -1,7 +1,7 @@
 
 package modelo;
 
-public class Circulo{
+public class Circulo  extends Figura{
    private int radio ;
 
    public Circulo(int radio){
@@ -12,15 +12,29 @@ public class Circulo{
       this.radio = Integer.parseInt(radio);
    }
 
+   @Override
    public Double area(){
       return Math.PI * radio * radio;
    }
 
+   @Override
    public Double perimetro(){
       return 2 * Math.PI * radio;
    }
 
-   public String estado(){
-        return "Círculo de área: "+ area() + " y perímetro: " + perimetro();
-    }
+   @Override
+   public String etiqueta(){
+      return "Círculo";
+   }
+
 }
+
+
+
+
+
+
+
+
+
+

@@ -1,6 +1,6 @@
 package modelo;
 
-public class Cuadrado{
+public class Cuadrado extends Figura{
     private int lado;
 
     public Cuadrado(int lado){
@@ -11,19 +11,31 @@ public class Cuadrado{
         this.lado = Integer.parseInt( lado);
     }
 
-    public int area(){
-        return lado * lado;
+    @Override
+    public Double area(){
+        double respuesta = lado * lado;
+        return respuesta;
     }
 
-    public int perimetro(){
-        return 4 * lado;
+    @Override
+    public Double perimetro(){
+        double respuesta = 4 * lado;
+        return respuesta;
     }
 
-    public String estado(){
-        return "Cuadrado de área: "+ area() + " y perímetro: " + perimetro();
-    }
+    @Override
+    public String etiqueta(){
+      return "Cuadrado";
+   }
+
 
 }
+
+
+
+
+
+
 
 
 
