@@ -1,9 +1,11 @@
 package modelo;
 
 import java.nio.file.*;
-import java.util.List;
+import java.util.*;
 import java.net.*;
 import java.io.*;
+import java.sql.*;
+
 
 public class Fuente{
    // Lee un archivo y devuelve una lista de líneas
@@ -22,5 +24,37 @@ public class Fuente{
       List<String> lineas = buffer.lines().toList();
       return lineas;
    }
+   // Lee la base de datos local
+   public List<Medicina> leerDBMedicina() throws SQLException {
+
+    String url = "jdbc:mysql://localhost:3306/farmacia";
+    String usuario = "root";
+    String clave = "";
+
+    String sql = "select codigo,nombre, laboratorio,tipo,cantidad,precio from medicamentos";
+
+    List<Medicina> medicinas = new ArrayList<>();
+    try {
+        Connection conexion = DriverManager.getConnection(url, usuario, clave);
+        Statement sentencia = conexion.createStatement();
+        ResultSet resultados = sentencia.executeQuery(sql);
+
+        while (resultados.next()) {
+
+            Medicina medicina = new Medicina(
+                    resultados.getString("codigo"),
+                    resultados.getString("nombre"),
+                    resultados.getString("laboratorio"),
+                    resultados.getString("tipo"),
+                    resultados.getInt("cantidad"),
+                    resultados.getDouble("precio")
+            );
+            medicinas.add(medicina);
+        }
+    } catch(Exception e){
+        System.out.println("Error: "+e.getMessage());
+    }
+    return medicinas;
+}
 
 }

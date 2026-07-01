@@ -17,9 +17,7 @@ public class App {
         // Obtener lista de medicinas
 
         Fuente fuente = new Fuente();
-        List<String> lineas = fuente.leerURL("https://raw.githubusercontent.com/vmejiaec/JavaCurso/refs/heads/main/Leer/medicinas.txt");
-        Servicio servicio = new Servicio();
-        List<Medicina> medicinas  = servicio.convertir(lineas);
+        List<Medicina> medicinas = fuente.leeDBMedicina();
 
         // Crear la ventana de medicinas
         JFrame ventana = new JFrame("Farmacia Salud Total");
