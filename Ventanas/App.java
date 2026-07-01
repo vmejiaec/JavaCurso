@@ -1,14 +1,10 @@
-import modelo.Fuente;
-import modelo.Medicina;
-import modelo.MedicinaRepositorio;
-import controlador.Servicio;
-
-
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import modelo.Fuente;
+import modelo.Medicina;
 
 public class App {
 
@@ -17,7 +13,7 @@ public class App {
         // Obtener lista de medicinas
 
         Fuente fuente = new Fuente();
-        List<Medicina> medicinas = fuente.leeDBMedicina();
+        List<Medicina> medicinas = fuente.leerDBMedicina();
 
         // Crear la ventana de medicinas
         JFrame ventana = new JFrame("Farmacia Salud Total");

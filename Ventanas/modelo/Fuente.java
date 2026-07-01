@@ -1,10 +1,10 @@
 package modelo;
 
-import java.nio.file.*;
-import java.util.*;
-import java.net.*;
 import java.io.*;
+import java.net.*;
+import java.nio.file.*;
 import java.sql.*;
+import java.util.*;
 
 
 public class Fuente{
@@ -27,11 +27,11 @@ public class Fuente{
    // Lee la base de datos local
    public List<Medicina> leerDBMedicina() throws SQLException {
 
-    String url = "jdbc:mysql://localhost:3306/farmacia";
+    String url = "jdbc:mysql://localhost:3306/farmacias";
     String usuario = "root";
     String clave = "";
 
-    String sql = "select codigo,nombre, laboratorio,tipo,cantidad,precio from medicamentos";
+    String sql = "select codigo,nombre_comercial, tipo,cantidad,precio, farmaceutica from medicamento";
 
     List<Medicina> medicinas = new ArrayList<>();
     try {
@@ -43,8 +43,8 @@ public class Fuente{
 
             Medicina medicina = new Medicina(
                     resultados.getString("codigo"),
-                    resultados.getString("nombre"),
-                    resultados.getString("laboratorio"),
+                    resultados.getString("nombre_comercial"),
+                    resultados.getString("farmaceutica"),
                     resultados.getString("tipo"),
                     resultados.getInt("cantidad"),
                     resultados.getDouble("precio")
