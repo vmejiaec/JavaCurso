@@ -41,9 +41,12 @@ public class Medicina{
 
    // Retrona el contenido en un Object Array
    public Object[] toArray(){
-      return new Object[] {codigo, nombre, farmaceutica, tipo, cantidad, precio};
+      return new Object[] {codigo, nombre, farmaceutica, tipo,  cantidad, precio};
    }
 
+   public EstadoMedicina estado() {
+      return new EstadoMedicina(codigo, nombre, farmaceutica, tipo, cantidad, precio);
+   }
 }
 
 

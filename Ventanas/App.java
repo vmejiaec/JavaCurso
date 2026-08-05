@@ -38,9 +38,7 @@ public class App {
         ventana.add(panelTabla);
         panelTabla.setBounds(390,20,490,400);
 
-        String[] cabeceras = {
-            "Còdigo","NOmbre","Laboratorio","Tipo","Precio", "Cantidad"
-        };
+        String[] cabeceras = {"Còdigo","NOmbre","Laboratorio","Tipo", "Cantidad", "Precio"};
 
         DefaultTableModel modelo = new DefaultTableModel(cabeceras,0);
         for (Medicina medicina:medicinas){
@@ -55,22 +53,22 @@ public class App {
 
         // Campos
         JLabel lblCodigo = new JLabel("Código:");
-        JTextField txtCodigo = new JTextField("A12");
+        JTextField txtCodigo = new JTextField("");
 
         JLabel lblNombre = new JLabel("Nombre:");
-        JTextField txtNombre = new JTextField("Acetaminofen");
+        JTextField txtNombre = new JTextField("");
 
         JLabel lblLaboratorio = new JLabel("Laboratorio");
-        JTextField txtLaboratorio = new JTextField("Bayer");
+        JTextField txtLaboratorio = new JTextField("");
 
         JLabel lblTipo = new JLabel("Tipo");
-        JTextField txtTipo = new JTextField("Genérico");
+        JTextField txtTipo = new JTextField("");
 
         JLabel lblCantidad = new JLabel("Cantidad");
-        JTextField txtCantidad = new JTextField("23");
+        JTextField txtCantidad = new JTextField("");
 
         JLabel lblPrecio = new JLabel("Precio");
-        JTextField txtPrecio = new JTextField("0.34");
+        JTextField txtPrecio = new JTextField("");
 
         // Etiqueta para publicar mensajes
         JLabel lblMensaje = new JLabel("...");
@@ -111,7 +109,6 @@ public class App {
                 // Buscar la medicina
                 for(int i =0; i<NoFilas; i++){
                     String nombre = modelo.getValueAt(i,1).toString();
-                    System.out.println("Prueba: "+nombre);
                     if (nombre.equalsIgnoreCase (medicinaBuscada)){
                        medicinaEncontrada = true;
                     }
@@ -120,18 +117,22 @@ public class App {
                 if (medicinaEncontrada){
                     lblMensaje.setText("ERROR. La medicina ya existe.");
                 } else {
-                    // Inserta una nueva fila al model
-                    modelo.addRow(
-                    new Object[]{
+                    // Inserta una nueva fila al modelo
+                    Medicina nueva = new Medicina(
                         txtCodigo.getText(),
                         txtNombre.getText(),
                         txtLaboratorio.getText(),
                         txtTipo.getText(),
-                        txtPrecio.getText(),
-                        txtCantidad.getText()
-                        }
+                        Integer.parseInt(txtCantidad.getText()),
+                        Double.parseDouble(txtPrecio.getText())
                     );
-                    lblMensaje.setText("La medicina ha sido creada.");
+
+                    if (fuente.insertarMedicina(nueva)) {
+                        modelo.addRow(nueva.toArray());
+                        lblMensaje.setText("La medicina ha sido creada.");
+                    } else {
+                        lblMensaje.setText("Error al guardar en la base de datos.");
+                    }
                 }
             }
         );
@@ -139,12 +140,54 @@ public class App {
         btnModificar.addActionListener(
             e -> {
 
+                int noFila = tabla.getSelectedRow();
+
+                if (noFila == -1){
+                    lblMensaje.setText("Seleccione una medicina.");
+                    return;
+                }
+
+                try{
+
+                    Medicina medicina = new Medicina(
+                        txtCodigo.getText(),
+                        txtNombre.getText(),
+                        txtLaboratorio.getText(),
+                        txtTipo.getText(),
+                        Integer.parseInt(txtCantidad.getText()),
+                        Double.parseDouble(txtPrecio.getText())
+                    );
+
+                    if(fuente.modificarMedicina(medicina)){
+
+                        modelo.setValueAt(txtCodigo.getText(),       noFila, 0);
+                        modelo.setValueAt(txtNombre.getText(),       noFila, 1);
+                        modelo.setValueAt(txtLaboratorio.getText(),  noFila, 2);
+                        modelo.setValueAt(txtTipo.getText(),         noFila, 3);
+                        modelo.setValueAt(txtCantidad.getText(),     noFila, 4);
+                        modelo.setValueAt(txtPrecio.getText(),       noFila, 5);
+                        
+
+                        lblMensaje.setText("La medicina fue modificada.");
+
+                    }else{
+                        lblMensaje.setText("No fue posible modificar la medicina.");
+                    }
+
+                }catch(NumberFormatException ex){
+                    lblMensaje.setText("Cantidad debe ser un entero y precio un decimal.");
+                }
+
             }
         );
 
         btnBorrar.addActionListener(
             e -> {
                 int noFila = tabla.getSelectedRow();
+                if (noFila == -1) {
+                    lblMensaje.setText("Seleccione una fila para borrar.");
+                    return;
+                }
                 int confirmacion = JOptionPane.showConfirmDialog(
                     ventana,
                     "¿Está seguro de borrar la medicina seleccionada?",
@@ -153,9 +196,22 @@ public class App {
                 );
 
                 if (confirmacion == JOptionPane.YES_OPTION){
-                    modelo.removeRow(noFila);
-                    lblMensaje.setText("Registro Borrado");
+                    String codigo = txtCodigo.getText();
+
+                    if (fuente.borrarMedicina(codigo)) {
+                        modelo.removeRow(tabla.getSelectedRow());
+                        lblMensaje.setText("Registro borrado.");
+                    } else {
+                        lblMensaje.setText("Error al borrar en la base de datos.");
+                    }
                 }
+
+                txtCodigo.setText("");
+                txtNombre.setText("");
+                txtLaboratorio.setText("");
+                txtTipo.setText("");
+                txtPrecio.setText("");
+                txtCantidad.setText("");
             }
         );
 
@@ -163,16 +219,23 @@ public class App {
 
         tabla.getSelectionModel().addListSelectionListener(
             e -> {
-               int noFila = tabla.getSelectedRow();
+                if (e.getValueIsAdjusting()) {
+                    return;
+                }
 
-               System.out.println("Fila seleccionada: "+ noFila);
+                int noFila = tabla.getSelectedRow();
+
+                if (noFila == -1) {
+                    return;
+                }
 
                txtCodigo.setText(modelo.getValueAt(noFila,0).toString());
                txtNombre.setText(modelo.getValueAt(noFila,1).toString());
                txtLaboratorio.setText(modelo.getValueAt(noFila,2).toString());
                txtTipo.setText(modelo.getValueAt(noFila,3).toString());
-               txtPrecio.setText(modelo.getValueAt(noFila,4).toString());
-               txtCantidad.setText(modelo.getValueAt(noFila,5).toString());
+               txtCantidad.setText(modelo.getValueAt(noFila,4).toString());
+               txtPrecio.setText(modelo.getValueAt(noFila,5).toString());
+               
             }
         );
 
